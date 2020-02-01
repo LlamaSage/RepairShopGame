@@ -12,7 +12,8 @@ public class GameManager : Singleton<GameManager>
     public List<Custom> customers = new List<Custom>();
     public List<Employ> employees = new List<Employ>();
     public List<Employ> potentialEmployees = new List<Employ>();
-    public List<WorkSpaceScript> workspaces = new List<WorkSpaceScript>();
+    public List<WorkSpaceScript> workSpaces = new List<WorkSpaceScript>();
+    public WaitSpace[] waitSpaces;
     public GameState currentState = 0;
 
     public float currentMoney = 1000000.0f;
@@ -39,6 +40,12 @@ public class GameManager : Singleton<GameManager>
     {
         RefreshEmployeeCandidates();
         GameObject.Find("CurrentMoneyTextField").GetComponent<TMPro.TextMeshProUGUI>().text = "$ " + currentMoney.ToString("c2");
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("WaitSpace");
+        waitSpaces = new WaitSpace[gos.Length];
+        foreach(GameObject go in gos)
+        {
+            waitSpaces[go.GetComponent<WaitSpace>().waitSpaceID] = go.GetComponent<WaitSpace>();
+        }
     }
 
     public void MousePickUp(Employ e)
@@ -66,7 +73,7 @@ public class GameManager : Singleton<GameManager>
     #region Hire And Fire Employees
     public bool HireEmployee(Employ e)
     {
-        foreach(WorkSpaceScript ws in workspaces)
+        foreach(WorkSpaceScript ws in workSpaces)
         {
             //Check for available space
             if((!ws.isOccupied) && ws.type == WorkSpaceScript.WorkStationType.NEUTRAL)
@@ -101,6 +108,20 @@ public class GameManager : Singleton<GameManager>
         return _f;
     }
 
+    public void RemoveCustomer(Custom c)
+    {
+        c.currentWaitingSpace.RemoveOccupant();
+        customers.Remove(c);
+        for(int i=0; i<waitSpaces.Length-1; i++)
+        {
+            if((!waitSpaces[i].isOccupied) && waitSpaces[i+1].isOccupied)
+            {
+                waitSpaces[i].SetOccupant(waitSpaces[i + 1].occupant);
+                waitSpaces[i + 1].RemoveOccupant();
+            }
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -112,7 +133,17 @@ public class GameManager : Singleton<GameManager>
             if (customerTimer > customerFrequency)
             {
                 Debug.Log("New Customer!");
-                customers.Add(new Custom());
+                foreach(WaitSpace ws in waitSpaces)
+                {
+                    if(!ws.isOccupied)
+                    {
+                        Custom cu = new Custom();
+                        ws.SetOccupant(cu);
+                        customers.Add(cu);
+                        ws.isOccupied = true;
+                        break;
+                    }
+                }
                 customerTimer = 0.0f;
             }
 
@@ -123,7 +154,7 @@ public class GameManager : Singleton<GameManager>
                 if (customers[i].patience <= 0.0f)
                 {
                     Debug.Log("Frustrated!");
-                    customers.RemoveAt(i);
+                    RemoveCustomer(customers[i]);
 
                 }
             }
@@ -144,7 +175,7 @@ public class GameManager : Singleton<GameManager>
 
             //Workstation Progress
             {
-                foreach(WorkSpaceScript ws in workspaces)
+                foreach(WorkSpaceScript ws in workSpaces)
                 {
                     if(ws.isOccupied)
                     {

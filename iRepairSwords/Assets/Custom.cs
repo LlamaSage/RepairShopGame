@@ -1,6 +1,7 @@
 ﻿public class Custom
 {
-    public float patience = 30.0f;
+    public float patience = 12.0f;
+    public WaitSpace currentWaitingSpace;
     public Quest quest;
 }
 

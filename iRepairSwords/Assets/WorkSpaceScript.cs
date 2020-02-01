@@ -6,10 +6,10 @@ public class WorkSpaceScript : MonoBehaviour
 {
     public bool isOccupied = false;
     public Employ occupant;
-    public bool isShowingInfo = false;
+    public static bool isShowingInfo = false;
     public Transform InfoPanel;
     public GameObject EmployeeProfilePrefab;
-    private GameObject spawnedInfo;
+    private static GameObject spawnedInfo;
     public WorkStationType type = 0;
     public GameObject occupantGraphic;
 
@@ -23,7 +23,8 @@ public class WorkSpaceScript : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.workspaces.Add(this);
+        GameManager.Instance.workSpaces.Add(this);
+        occupantGraphic.GetComponent<SpriteRenderer>().sortingOrder = this.GetComponent<SpriteRenderer>().sortingOrder + 1;
     }
 
     private void OnMouseDown()
@@ -39,8 +40,19 @@ public class WorkSpaceScript : MonoBehaviour
             }
             else
             {
-                Destroy(spawnedInfo);
-                isShowingInfo = false;
+                if(spawnedInfo.GetComponent<EmployeesProfileHandler>().employee == occupant)
+                {
+                    Destroy(spawnedInfo);
+                    spawnedInfo = null;
+                    isShowingInfo = false;
+                }
+                else
+                {
+                    Destroy(spawnedInfo);
+                    GameObject go = Instantiate(EmployeeProfilePrefab, InfoPanel);
+                    go.GetComponent<EmployeesProfileHandler>().SetEmployee(occupant);
+                    spawnedInfo = go;
+                }
             }
         }
         else
@@ -89,6 +101,7 @@ public class WorkSpaceScript : MonoBehaviour
         if(isShowingInfo)
         {
             Destroy(spawnedInfo);
+            spawnedInfo = null;
             isShowingInfo = false;
         }
         occupant.currentWorkSpace = null;

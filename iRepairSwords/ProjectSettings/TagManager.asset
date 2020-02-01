@@ -6,6 +6,7 @@ TagManager:
   tags:
   - EmployeeProfile
   - WorkSpace
+  - WaitSpace
   layers:
   - Default
   - TransparentFX
