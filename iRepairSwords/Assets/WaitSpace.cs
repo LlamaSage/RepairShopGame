@@ -9,12 +9,22 @@ public class WaitSpace : MonoBehaviour
     public GameObject occupantGraphic;
     public int waitSpaceID;
     public static int currentID = 0;
+    public GameObject QuestOfferPanel;
 
     public void Start()
     {
         //GameManager.Instance.waitSpaces.Add(this);
         occupantGraphic.GetComponent<SpriteRenderer>().sortingOrder = this.GetComponent<SpriteRenderer>().sortingOrder + 1;
         //waitSpaceID = currentID++;
+    }
+
+    private void OnMouseDown()
+    {
+        if (isOccupied)
+        {
+            QuestOfferPanel.SetActive(true);
+            QuestOfferPanel.GetComponent<QuestOffer>().AssignCustomer(occupant);
+        }
     }
 
     public void SetOccupant(Custom c)

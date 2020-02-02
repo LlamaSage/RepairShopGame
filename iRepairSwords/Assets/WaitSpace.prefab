@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3037914065644364716}
   - component: {fileID: 3037914065644364719}
   - component: {fileID: 5557851099438572896}
+  - component: {fileID: 2731680796806595552}
   m_Layer: 0
   m_Name: WaitSpace
   m_TagString: WaitSpace
@@ -98,6 +99,32 @@ MonoBehaviour:
   isOccupied: 0
   occupantGraphic: {fileID: 3037914066493560307}
   waitSpaceID: 0
+--- !u!61 &2731680796806595552
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037914065644364707}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.41552424}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.4230769, y: 1.6410257}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.4230769, y: 2.472074}
+  m_EdgeRadius: 0
 --- !u!1 &3037914066493560307
 GameObject:
   m_ObjectHideFlags: 0
